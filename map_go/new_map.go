@@ -1,4 +1,4 @@
-package main
+package map_go
 
 import (
 	"log"
@@ -111,7 +111,7 @@ func Test_Write(m *NewMap, i int) {
 	m.Put(i, Test_RandomString(12))
 	log.Printf("Test_Write:%d value:%s\n", i, m.mp[i])
 	// }
-	// wg.Done()
+	wg.Done()
 }
 
 func Test_Read(m *NewMap, i int) {
@@ -121,18 +121,9 @@ func Test_Read(m *NewMap, i int) {
 	r, _ := m.Get(i, 100*time.Millisecond)
 	log.Printf("Test_Read :%d value:%s\n", i, r)
 	// }
-	// wg.Done()
+	wg.Done()
 }
 
-func main() {
-	wg = sync.WaitGroup{}
-	mp := MallocNewMap(100)
-	for i := 0; i < 100; i++ {
-		wg.Add(1)
-		go Test_Write(mp, i)
-		wg.Add(1)
-		go Test_Read(mp, i)
-		// wg.Done()
-	}
-	wg.Wait()
+func GetWg() *sync.WaitGroup {
+	return &wg
 }

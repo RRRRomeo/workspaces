@@ -1,14 +1,23 @@
 GO = go build
-SRC = sample_map.go new_map.go
+GO_FLAGS =
+GO_LFLAGS = 
+BUILD_DIR = ./build/
+CMD_DIR = ./cmd/
+SRC_NEW_MAP = ./cmd/new_map_cmd/new_map_cmd.go
+SRC_SAMPLE_MAP = ./cmd/sample_map_cmd/sample_map_cmd.go
 
-all: clean main run
+new_main:
+	@$(GO) -o $(BUILD_DIR)$@ $(SRC_NEW_MAP)
 
-main:
-	@$(GO) -o $@ $(SRC)
+sample_main:
+	@$(GO) -o $(BUILD_DIR)$@ $(SRC_SAMPLE_MAP)
+
+%:
+	@$(GO) $(GO_FLAGS) -o $(BUILD_DIR)$@ $(CMD_DIR)$@/$@.go $(GO_LFLAGS)
 
 run:
-	@./main
+	@./build/main
 
 clean:
-	@-rm ./main
-.PHONY:all main
+	@-rm ./build/*_main
+.PHONY: clean new_main sample_main %

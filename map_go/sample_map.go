@@ -1,4 +1,4 @@
-package main
+package map_go
 
 import (
 	"errors"
@@ -39,8 +39,8 @@ func SampleMap_Write(m *SampleMap, element string, key int) (int, error) {
 		return -1, errors.New("SampleMap ptr is nil")
 	}
 
-	// m.Lock()
-	// defer m.Unlock()
+	m.Lock()
+	defer m.Unlock()
 
 	if m.Dat[key] == element {
 		return 0x8001, errors.New("element already exist and same")
@@ -52,7 +52,6 @@ func SampleMap_Write(m *SampleMap, element string, key int) (int, error) {
 	}
 
 	m.Dat[key] = element
-
 	return 0, nil
 }
 
@@ -63,8 +62,8 @@ func SampleMap_Read(m *SampleMap, key int) (string, error) {
 		return "-1", errors.New("inner map is nil")
 	}
 
-	// m.Lock()
-	// defer m.Locker.Unlock()
+	m.Lock()
+	defer m.Unlock()
 	val, ok := m.Dat[key]
 	if ok {
 		// m.Unlock()
@@ -75,17 +74,17 @@ func SampleMap_Read(m *SampleMap, key int) (string, error) {
 }
 
 func Test_GoRunTime_Write(m *SampleMap, i int) {
-	log.Printf("%s...\n", "Test_GoRunTime_Write")
+	// log.Printf("%s...\n", "Test_GoRunTime_Write")
 	// for i := 0; i < 50; i++ {
 	// s := fmt.Sprintf("%d", i)
 	SampleMap_Write(m, Test_RandomString(12), i)
-	log.Printf("Sample_Write:%d value:%s\n", i, m.Dat[i])
+	log.Printf("Sample_Write:%d\n", i)
 	// }
 	wg.Done()
 }
 
 func Test_GoRunTime_Read(m *SampleMap, i int) {
-	log.Printf("%s...\n", "Test_GoRunTime_Read")
+	// log.Printf("%s...\n", "Test_GoRunTime_Read")
 	// for i := 0; i < 50; i++ {
 	r, _ := SampleMap_Read(m, i)
 	log.Printf("read :%d value:%s\n", i, r)
@@ -100,22 +99,3 @@ func Test_RandomString(lengh int) string {
 	}
 	return string(str)
 }
-
-// func main() {
-// 	wg = sync.WaitGroup{}
-// 	log.Printf("main....\n")
-// 	m, err := SampleMap_Init(100)
-// 	log.Printf("tttt\n")
-// 	wg.Add(4)
-// 	if err != nil {
-// 		return
-// 	}
-// 	log.Printf("tttt2:%v\n", m.Dat)
-// 	for i := 0; i < 2; i++ {
-// 		go Test_GoRunTime_Write(m, i)
-// 		go Test_GoRunTime_Read(m, i)
-// 	}
-// 	wg.Wait()
-// 	log.Printf("main....end\n")
-
-// }
