@@ -2,7 +2,7 @@
  * @Author: hfouyang hfouyang@quant360.com
  * @Date: 2023-03-20 14:42:14
  * @LastEditors: hfouyang hfouyang@quant360.com
- * @LastEditTime: 2023-03-28 13:57:39
+ * @LastEditTime: 2023-03-30 18:05:33
  * @FilePath: /map_chan/internal/mkt_idx_part/mkt_idx.go
  */
 package mkt_idx_part
@@ -145,3 +145,84 @@ func (i *Mkt_idx) PopItemFromChanAndCompare(ch chan *btree_idx_demo.Idx_node) er
 	}
 	return nil
 }
+
+// func CompareIt2(l *btree_idx_demo.Idx_links, n *btree_idx_demo.Idx_node) error {
+// 	if l == nil || n == nil {
+// 		return errors.New("inner list or node is nil")
+// 	}
+// 	typ := n.Typ
+// 	cur := l.H
+
+// 	// 排序
+// 	sortLinks(cur, typ)
+
+// 	// 二分查找
+// 	idx := searchForInsertPos(cur, n, typ)
+// 	if idx == -1 {
+// 		btree_idx_demo.LinksPushBack(l, n)
+// 	} else {
+// 		insertNode(cur, idx, n)
+// 		l.L++
+// 	}
+
+// 	return nil
+
+// }
+
+// func sortLinks(h *btree_idx_demo.Idx_node, typ uint16) {
+// 	// 将链表节点按照 typ 所定义的比较规则排序
+// 	switch typ {
+// 	case btree_idx_demo.ESNAP:
+// 		sort.SliceStable(h, func(i, j int) bool {
+// 			return h[i].Tim < h[j].Tim
+// 		})
+// 	default:
+// 		sort.SliceStable(h, func(i, j int) bool {
+// 			return h[i].BidIdx < h[j].BidIdx
+// 		})
+// 	}
+// }
+
+// func searchForInsertPos(h *btree_idx_demo.Idx_links, n *btree_idx_demo.Idx_node, typ uint16) int {
+// 	// 二分查找插入位置
+// 	switch typ {
+// 	case btree_idx_demo.ESNAP:
+// 		for low, high := 0, len(h)-1; low <= high; {
+// 			mid := (low + high) / 2
+// 			if h[mid].Tim == n.Tim {
+// 				return mid
+// 			} else if h[mid].Tim < n.Tim {
+// 				low = mid + 1
+// 			} else {
+// 				high = mid - 1
+// 			}
+// 		}
+// 		return low // 找到插入位置，返回索引
+// 	default:
+// 		for low, high := 0, len(h)-1; low <= high; {
+// 			mid := (low + high) / 2
+// 			if h[mid].BidIdx == n.BidIdx {
+// 				return mid
+// 			} else if h[mid].BidIdx < n.BidIdx {
+// 				low = mid + 1
+// 			} else {
+// 				high = mid - 1
+// 			}
+// 		}
+// 		return low // 找到插入位置，返回索引
+// 	}
+// 	return -1 // 错误情况
+// }
+
+// func insertNode(h []*btree_idx_demo.Idx_links, idx int, n *btree_idx_demo.Idx_node) {
+// 	// 在 idx 处插入新节点 n
+// 	// 注意需要移动后面的节点
+// 	for i := len(h) - 1; i >= idx; i-- {
+// 		h[i+1] = h[i]
+// 	}
+// 	h[idx] = &btree_idx_demo.Idx_links{
+// 		BidIdx: n.BidIdx,
+// 		Tim:    n.Tim,
+// 		N:      n.N,
+// 	}
+// }

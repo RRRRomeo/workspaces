@@ -2,7 +2,7 @@
  * @Author: hfouyang hfouyang@quant360.com
  * @Date: 2023-03-17 10:45:46
  * @LastEditors: hfouyang hfouyang@quant360.com
- * @LastEditTime: 2023-03-20 09:21:04
+ * @LastEditTime: 2023-03-30 13:26:03
  * @FilePath: /map_chan/cmd/links_cmd/links_cmd.go
  */
 package main
@@ -10,7 +10,6 @@ package main
 import (
 	"fmt"
 	"map_chan/btree_idx_demo"
-	"map_chan/map_go"
 )
 
 func main() {
@@ -18,7 +17,7 @@ func main() {
 	fmt.Printf("links:%v\n", l)
 
 	for i := 0; i < 100; i++ {
-		nn := btree_idx_demo.NewNode(uint32(i), 0, map_go.Test_RandomString(8), nil)
+		nn := btree_idx_demo.NewNode(uint32(i), 0, 0, 1, 0, 0, nil)
 		btree_idx_demo.LinksPushBack(l, nn)
 	}
 
@@ -27,5 +26,5 @@ func main() {
 	// 	h := btree_idx_demo.LinksTop(l)
 	// 	fmt.Printf("links.val:%v\n", *h)
 	// }
-	btree_idx_demo.LinkkDump(l)
+	btree_idx_demo.LinksDump(l)
 }
