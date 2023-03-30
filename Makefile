@@ -1,7 +1,9 @@
 GO = go build
+GO_T = go test
 GO_FLAGS =
 GO_LFLAGS = 
 BUILD_DIR = ./build/
+TEST_DIR = ./test/
 CMD_DIR = ./cmd/
 SRC_NEW_MAP = ./cmd/new_map_cmd/new_map_cmd.go
 SRC_SAMPLE_MAP = ./cmd/sample_map_cmd/sample_map_cmd.go

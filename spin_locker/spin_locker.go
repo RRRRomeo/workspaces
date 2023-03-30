@@ -2,7 +2,7 @@
  * @Author: hfouyang hfouyang@quant360.com
  * @Date: 2023-03-14 10:01:34
  * @LastEditors: hfouyang hfouyang@quant360.com
- * @LastEditTime: 2023-03-16 10:48:53
+ * @LastEditTime: 2023-03-20 14:54:35
  * @FilePath: /map_chan/spin_locker/spin_locker.go
  */
 package spin_locker
@@ -14,6 +14,7 @@ import (
 )
 
 type spinLocker uint32
+type Spin spinLocker
 
 var maxBackoff = 16
 
