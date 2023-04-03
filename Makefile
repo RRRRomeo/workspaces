@@ -22,4 +22,5 @@ run:
 
 clean:
 	@-rm ./build/*_main
+	
 .PHONY: clean new_main sample_main %

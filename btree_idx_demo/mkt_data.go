@@ -2,7 +2,7 @@
  * @Author: hfouyang hfouyang@quant360.com
  * @Date: 2023-03-16 10:51:18
  * @LastEditors: hfouyang hfouyang@quant360.com
- * @LastEditTime: 2023-03-27 14:33:50
+ * @LastEditTime: 2023-03-31 13:55:56
  * @FilePath: /map_chan/btree_idx_demo/mkt_data.go
  * @Description: using btree func to save the mktdata idx;
  */
@@ -16,6 +16,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sync"
 )
 
 const (
@@ -186,4 +187,160 @@ func WriteListIntoFile(lk *Idx_links, fp string) error {
 
 func (lk *Idx_links) GetLen() uint64 {
 	return lk.L
+}
+
+type Hash_Node struct {
+	// ... key ==> BidIdx
+	Write_Node
+	BidIdx uint32
+	Tim    int32
+	N      *Hash_Node
+}
+
+type HashTable struct {
+	sync.Mutex
+	l  uint32
+	tb map[uint32]*Hash_Node
+}
+
+func NewHashNode(idx uint32, off uint32, date int32, typ uint16, tim int32, inStrId uint16) *Hash_Node {
+	return &Hash_Node{
+		Write_Node: Write_Node{
+			Typ:       typ,
+			SZInStrId: inStrId,
+			Dat:       date,
+			Off:       off,
+		},
+		BidIdx: idx,
+		Tim:    tim,
+		N:      nil,
+	}
+}
+
+func NewHashTable(size uint32) *HashTable {
+	return &HashTable{
+		tb: make(map[uint32]*Hash_Node, size),
+		l:  0,
+	}
+}
+
+func (ht *HashTable) DelHashNode(k uint32) {
+	ht.Lock()
+	defer ht.Unlock()
+	delete(ht.tb, k)
+}
+
+func (ht *HashTable) Insert(k uint32, v *Hash_Node) error {
+	if v == nil {
+		return errors.New("val is nil")
+	}
+	ht.Lock()
+	defer ht.Unlock()
+
+	if k == 0 { // ... k == 0 ==> this value is snapshot
+		// binary search
+		idx, err := binSearch(ht, v.Tim)
+		if err != nil {
+			return err
+		}
+		ht.tb[idx].N = v
+		ht.l++
+		return nil
+	}
+	ht.tb[k] = v
+	ht.l++
+
+	return nil
+}
+
+func (ht *HashTable) Get(k uint32) (*Hash_Node, error) {
+	ht.Lock()
+	defer ht.Unlock()
+	v, ok := ht.tb[k]
+	if !ok {
+		return nil, errors.New("dont get meet val")
+	}
+
+	return v, nil
+}
+
+func (ht *HashTable) HashDump() {
+	var i uint32 = 0
+	for ; i < ht.l; i++ {
+		v, ok := ht.tb[i]
+		if !ok {
+			continue
+		}
+		log.Printf("v:%v\n", v)
+		for v.N != nil {
+			log.Printf("v.N:%v\n", v.N)
+			v.N = v.N.N
+		}
+	}
+}
+
+func binSearch(beSearch *HashTable, k int32) (uint32, error) {
+	if beSearch == nil {
+		return 0, errors.New("the be searcher is nil")
+	}
+	// var left, mid, right uint32 = 0, 1, beSearch.l
+
+	// for mid > 0 && mid < beSearch.l {
+	// 	mid = (left + right) / 2
+	// 	log.Printf("left:%d, right:%d, mid:%d\n", left, right, mid)
+	// 	if beSearch.tb[mid].Tim <= k && beSearch.tb[mid+1].Tim > k {
+	// 		return mid, nil
+	// 	}
+	// 	if beSearch.tb[mid].Tim < k {
+	// 		left = mid
+	// 		continue
+	// 	}
+	// 	if beSearch.tb[mid].Tim > k {
+	// 		right = mid
+	// 		continue
+	// 	}
+	// }
+	karr := make([]uint32, 0)
+	for k, _ := range beSearch.tb {
+		karr = append(karr, k)
+	}
+
+	for i := len(karr) - 1; i >= 0; i-- {
+		if beSearch.tb[karr[i]].Tim > k {
+			continue
+		}
+
+		if beSearch.tb[karr[i]].Tim <= k {
+			return karr[i], nil
+		}
+	}
+
+	return 0, errors.New("dont search correct k")
+}
+
+func (ht *HashTable) PopHashNodeFromChanAndCompare(ch chan *Hash_Node) error {
+	if ch == nil {
+		return errors.New("chan is nil")
+	}
+	item, ok := <-ch
+	if !ok {
+		return errors.New("get item from chan is fail")
+	}
+
+	log.Printf("item:%v\n", item)
+
+	var k uint32 = 0
+	if item.Typ != ESNAP {
+		k = item.BidIdx
+	}
+
+	err := ht.Insert(k, item)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (ht *HashTable) GetLen() uint32 {
+	return ht.l
 }
