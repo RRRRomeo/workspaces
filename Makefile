@@ -1,6 +1,6 @@
 GO = go build
 GO_T = go test
-GO_FLAGS =
+GO_FLAGS = -ldflags "-X 'map_chan/log.LOG_RELEASE=1'"
 GO_LFLAGS = 
 BUILD_DIR = ./build/
 TEST_DIR = ./test/
@@ -15,6 +15,10 @@ sample_main:
 	@$(GO) -o $(BUILD_DIR)$@ $(SRC_SAMPLE_MAP)
 
 %:
+	@$(GO) -o $(BUILD_DIR)$@ $(CMD_DIR)$@/$@.go $(GO_LFLAGS)
+
+release_%_cmd:
+
 	@$(GO) $(GO_FLAGS) -o $(BUILD_DIR)$@ $(CMD_DIR)$@/$@.go $(GO_LFLAGS)
 
 run:
