@@ -3,7 +3,7 @@
  * @Date: 2023-03-20 15:02:38
  * @LastEditors: hfouyang hfouyang@quant360.com
  * @LastEditTime: 2023-04-03 10:04:12
- * @FilePath: /map_chan/cmd/mkt_idx_cmd/mkt_id_cmd.go
+ * @FilePath: /githuab.com/RRRRomeo/workspaces/cmd/mkt_idx_cmd/mkt_id_cmd.go
  */
 package main
 
@@ -12,14 +12,15 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"map_chan/btree_idx_demo"
-	"map_chan/internal/mkt_idx_part"
-	"map_chan/qsorter"
 	"os"
 	"runtime"
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"githuab.com/RRRRomeo/workspaces/btree_idx_demo"
+	"githuab.com/RRRRomeo/workspaces/internal/mkt_idx_part"
+	"githuab.com/RRRRomeo/workspaces/qsorter"
 )
 
 var wg sync.WaitGroup

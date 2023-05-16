@@ -3,15 +3,16 @@
  * @Date: 2023-03-29 10:23:34
  * @LastEditors: hfouyang hfouyang@quant360.com
  * @LastEditTime: 2023-03-29 11:25:06
- * @FilePath: /map_chan/cmd/idx_read_cmd/idx_read_cmd.go
+ * @FilePath: /githuab.com/RRRRomeo/workspaces/cmd/idx_read_cmd/idx_read_cmd.go
  */
 package main
 
 import (
 	"fmt"
 	"log"
-	mktidxcore "map_chan/internal/mkt_idx_core"
-	"map_chan/internal/mkt_idx_part"
+
+	mktidxcore "githuab.com/RRRRomeo/workspaces/internal/mkt_idx_core"
+	"githuab.com/RRRRomeo/workspaces/internal/mkt_idx_part"
 )
 
 func CallIdxRead() {

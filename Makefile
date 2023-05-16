@@ -1,6 +1,6 @@
 GO = go build
 GO_T = go test
-GO_FLAGS = -ldflags "-X 'map_chan/log.LOG_RELEASE=1'"
+GO_FLAGS = -ldflags "-X 'githuab.com/RRRRomeo/workspaces/log.LOG_RELEASE=1'"
 GO_LFLAGS = 
 BUILD_DIR = ./build/
 TEST_DIR = ./test/

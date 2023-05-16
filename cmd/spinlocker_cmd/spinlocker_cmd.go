@@ -3,15 +3,16 @@
  * @Date: 2023-03-15 17:21:32
  * @LastEditors: hfouyang hfouyang@quant360.com
  * @LastEditTime: 2023-03-16 10:45:10
- * @FilePath: /map_chan/cmd/spinlocker_cmd/spinlocker_cmd.go
+ * @FilePath: /githuab.com/RRRRomeo/workspaces/cmd/spinlocker_cmd/spinlocker_cmd.go
  */
 package main
 
 import (
 	"log"
-	"map_chan/map_go"
-	"map_chan/spin_locker"
 	"sync"
+
+	"githuab.com/RRRRomeo/workspaces/map_go"
+	"githuab.com/RRRRomeo/workspaces/spin_locker"
 )
 
 type TestStruct struct {

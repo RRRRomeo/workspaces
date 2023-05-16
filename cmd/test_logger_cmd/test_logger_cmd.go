@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"map_chan/log/api"
 	"sync"
+
+	"githuab.com/RRRRomeo/workspaces/log/api"
 )
 
 func main() {

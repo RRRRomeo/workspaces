@@ -3,7 +3,7 @@
  * @Date: 2023-03-28 14:40:25
  * @LastEditors: hfouyang hfouyang@quant360.com
  * @LastEditTime: 2023-03-28 14:42:16
- * @FilePath: /map_chan/pb_lines/pb_lines.go
+ * @FilePath: /githuab.com/RRRRomeo/workspaces/pb_lines/pb_lines.go
  */
 package pb_lines
 

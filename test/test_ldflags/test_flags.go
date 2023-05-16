@@ -3,7 +3,7 @@
  * @Date: 2023-03-30 13:27:17
  * @LastEditors: hfouyang hfouyang@quant360.com
  * @LastEditTime: 2023-03-30 17:52:48
- * @FilePath: /map_chan/test_ldflags/test_flags.go
+ * @FilePath: /githuab.com/RRRRomeo/workspaces/test_ldflags/test_flags.go
  */
 package testldflags
 

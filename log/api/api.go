@@ -1,8 +1,9 @@
 package api
 
 import (
-	"map_chan/log/internal"
 	"sync"
+
+	"githuab.com/RRRRomeo/workspaces/log/internal"
 )
 
 type LogApi struct {

@@ -3,7 +3,7 @@
  * @Date: 2023-03-14 10:01:34
  * @LastEditors: hfouyang hfouyang@quant360.com
  * @LastEditTime: 2023-03-20 14:54:35
- * @FilePath: /map_chan/spin_locker/spin_locker.go
+ * @FilePath: /githuab.com/RRRRomeo/workspaces/spin_locker/spin_locker.go
  */
 package spin_locker
 

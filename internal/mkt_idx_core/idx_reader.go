@@ -3,7 +3,7 @@
  * @Date: 2023-03-29 09:43:05
  * @LastEditors: hfouyang hfouyang@quant360.com
  * @LastEditTime: 2023-03-29 13:05:57
- * @FilePath: /map_chan/internal/mkt_idx_core/idx_reader.go
+ * @FilePath: /githuab.com/RRRRomeo/workspaces/internal/mkt_idx_core/idx_reader.go
  */
 package mktidxcore
 
@@ -14,11 +14,12 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"map_chan/qsorter"
 	"os"
 	"strconv"
 	"strings"
 	"sync"
+
+	"githuab.com/RRRRomeo/workspaces/qsorter"
 )
 
 const (

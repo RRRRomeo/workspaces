@@ -3,16 +3,17 @@
  * @Date: 2023-03-20 14:42:14
  * @LastEditors: hfouyang hfouyang@quant360.com
  * @LastEditTime: 2023-03-31 13:57:53
- * @FilePath: /map_chan/internal/mkt_idx_part/mkt_idx.go
+ * @FilePath: /githuab.com/RRRRomeo/workspaces/internal/mkt_idx_part/mkt_idx.go
  */
 package mkt_idx_part
 
 import (
 	"errors"
 	"log"
-	"map_chan/btree_idx_demo"
-	"map_chan/qsorter"
 	"sync"
+
+	"githuab.com/RRRRomeo/workspaces/btree_idx_demo"
+	"githuab.com/RRRRomeo/workspaces/qsorter"
 )
 
 type idx_manager interface {

@@ -1,10 +1,10 @@
-module map_chan
+module github.com/RRRRomeo/workspaces
 
 go 1.19
 
 require (
 	github.com/cheggaaa/pb/v3 v3.1.2
-	gitlab.quant360.com/algo_strategy_group/algo_trading v0.0.0-20230406032517-0bb79e7df025
+	gitlab.quant360.com/algo_strategy_group/algo_trading v0.2.1
 	gitlab.quant360.com/algo_strategy_group/mds_data_playback v0.1.7-0.20230322062125-7f47224907c0
 	gitlab.quant360.com/hfouyang/qlog v0.0.0-20230414052222-5433938dce45
 	gitlab.quant360.com/hsw/sz_match v0.1.4

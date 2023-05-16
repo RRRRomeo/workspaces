@@ -3,16 +3,17 @@
  * @Date: 2023-03-21 10:00:41
  * @LastEditors: hfouyang hfouyang@quant360.com
  * @LastEditTime: 2023-03-31 17:22:08
- * @FilePath: /map_chan/test/func_test.go
+ * @FilePath: /githuab.com/RRRRomeo/workspaces/test/func_test.go
  */
 package test
 
 import (
 	"log"
-	"map_chan/internal/mkt_idx_part"
 	"os"
 	"sync"
 	"testing"
+
+	"githuab.com/RRRRomeo/workspaces/internal/mkt_idx_part"
 )
 
 var wg sync.WaitGroup

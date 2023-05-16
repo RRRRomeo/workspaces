@@ -3,13 +3,14 @@
  * @Date: 2023-03-13 17:47:30
  * @LastEditors: hfouyang hfouyang@quant360.com
  * @LastEditTime: 2023-03-14 09:32:56
- * @FilePath: /map_chan/cmd/sample_map_cmd.go
+ * @FilePath: /githuab.com/RRRRomeo/workspaces/cmd/sample_map_cmd.go
  */
 package main
 
 import (
 	"log"
-	"map_chan/map_go"
+
+	"githuab.com/RRRRomeo/workspaces/map_go"
 )
 
 func main() {

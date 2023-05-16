@@ -3,7 +3,7 @@
  * @Date: 2023-03-27 17:37:23
  * @LastEditors: hfouyang hfouyang@quant360.com
  * @LastEditTime: 2023-03-27 17:59:13
- * @FilePath: /map_chan/test_chan/test_chan.go
+ * @FilePath: /githuab.com/RRRRomeo/workspaces/test_chan/test_chan.go
  */
 package main
 

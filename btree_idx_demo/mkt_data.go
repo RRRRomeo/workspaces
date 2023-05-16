@@ -3,7 +3,7 @@
  * @Date: 2023-03-16 10:51:18
  * @LastEditors: hfouyang hfouyang@quant360.com
  * @LastEditTime: 2023-03-31 13:55:56
- * @FilePath: /map_chan/btree_idx_demo/mkt_data.go
+ * @FilePath: /githuab.com/RRRRomeo/workspaces/btree_idx_demo/mkt_data.go
  * @Description: using btree func to save the mktdata idx;
  */
 package btree_idx_demo

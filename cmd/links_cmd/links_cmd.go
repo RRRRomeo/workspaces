@@ -3,13 +3,14 @@
  * @Date: 2023-03-17 10:45:46
  * @LastEditors: hfouyang hfouyang@quant360.com
  * @LastEditTime: 2023-03-30 13:26:03
- * @FilePath: /map_chan/cmd/links_cmd/links_cmd.go
+ * @FilePath: /githuab.com/RRRRomeo/workspaces/cmd/links_cmd/links_cmd.go
  */
 package main
 
 import (
 	"fmt"
-	"map_chan/btree_idx_demo"
+
+	"githuab.com/RRRRomeo/workspaces/btree_idx_demo"
 )
 
 func main() {

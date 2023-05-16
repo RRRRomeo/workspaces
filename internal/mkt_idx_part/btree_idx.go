@@ -3,7 +3,7 @@
  * @Date: 2023-03-21 14:46:00
  * @LastEditors: hfouyang hfouyang@quant360.com
  * @LastEditTime: 2023-03-23 10:24:44
- * @FilePath: /map_chan/internal/mkt_idx_part/btree_idx.go
+ * @FilePath: /githuab.com/RRRRomeo/workspaces/internal/mkt_idx_part/btree_idx.go
  */
 package mkt_idx_part
 

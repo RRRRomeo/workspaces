@@ -1,4 +1,0 @@
-[[32mINF[0m] 2023-04-07 16:41:57.857375917 /home/ty/data/code_spaces/map_chan/cmd/test_logger_cmd/test_logger_cmd.go:13 test logger using: 1
-[[33mWRN[0m] 2023-04-07 16:41:57.857588692 /home/ty/data/code_spaces/map_chan/cmd/test_logger_cmd/test_logger_cmd.go:14 test logger using: 1
-[[31mERR[0m] 2023-04-07 16:41:57.857965964 /home/ty/data/code_spaces/map_chan/cmd/test_logger_cmd/test_logger_cmd.go:15 test logger using: 1
-[[34mDBG[0m] 2023-04-07 16:41:57.858018558 /home/ty/data/code_spaces/map_chan/cmd/test_logger_cmd/test_logger_cmd.go:18 test logger using: 1
