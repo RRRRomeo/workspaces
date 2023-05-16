@@ -202,6 +202,8 @@ gitlab.quant360.com/algo_strategy_group/algo_trading v0.0.0-20230406032517-0bb79
 gitlab.quant360.com/algo_strategy_group/algo_trading v0.0.0-20230406032517-0bb79e7df025/go.mod h1:3i67XGNdHFn/R0OZca2PLZEmUcnpeajWOPTF48y52QQ=
 gitlab.quant360.com/algo_strategy_group/mds_data_playback v0.1.7-0.20230322062125-7f47224907c0 h1:cl11qzgJU3WVs39YAjxGy5NkFuzaMiV7LjivzwhJnUQ=
 gitlab.quant360.com/algo_strategy_group/mds_data_playback v0.1.7-0.20230322062125-7f47224907c0/go.mod h1:ih4qaTHqKrPh1ekuBSYUd291KUZtF9b4ooDxoww/qP0=
+gitlab.quant360.com/hfouyang/qlog v0.0.0-20230414052222-5433938dce45 h1:k//Nyqfub/Psb0QGB1dkpcF9Iwe4cDzVdpmQvJWKTpM=
+gitlab.quant360.com/hfouyang/qlog v0.0.0-20230414052222-5433938dce45/go.mod h1:i9PNZ8TATpkpqoiRGeC1L/GI+0ThHJ2T9GzN89Qsdqg=
 gitlab.quant360.com/hsw/sz_match v0.1.4 h1:xb6Gs2sijhovxdtolmKDXuhRyUqncfs5ke5fUYo7nTo=
 gitlab.quant360.com/hsw/sz_match v0.1.4/go.mod h1:EVJY4JuXhSM4pNabm1FwSHjbhIPRiR44h8RVK68TCAM=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=

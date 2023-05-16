@@ -9,7 +9,7 @@ package main
 
 import (
 	"log"
-	testldflags "map_chan/test_ldflags"
+	testldflags "map_chan/test/test_ldflags"
 )
 
 func main() {

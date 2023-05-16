@@ -9,10 +9,12 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"map_chan/btree_idx_demo"
 	"map_chan/internal/mkt_idx_part"
+	"map_chan/qsorter"
 	"os"
 	"runtime"
 	"sync"
@@ -67,10 +69,10 @@ func ReadFileToBuildNodeIntoChan(fn string, ch chan *btree_idx_demo.Idx_node) {
 	if i == 0 {
 		close(ch)
 	}
-	// wg.Done()
+	wg.Done()
 }
 
-func ReadFileToBuildHashNodeIntoChan(fn string, ch chan *btree_idx_demo.Hash_Node) {
+func ReadFileToBuildHashNodeIntoChan(fn string, ch chan *qsorter.Qsorter_node) {
 	// log.Printf("start read file to tlv")
 	r := mkt_idx_part.NewReader(1, fn)
 	for {
@@ -94,27 +96,35 @@ func ReadFileToBuildHashNodeIntoChan(fn string, ch chan *btree_idx_demo.Hash_Nod
 	wg.Done()
 }
 
-func SortHashNodeWithChan(ch chan *btree_idx_demo.Hash_Node, ht *btree_idx_demo.HashTable) error {
+func SortHashNodeWithChan(ch chan *qsorter.Qsorter_node, q *qsorter.Qsorter) error {
 	var err error = nil
 	defer wg.Done()
 
-	if ch == nil || ht == nil {
+	if ch == nil {
 		return errors.New("inner params has nil item")
 	}
 
 	for {
-		// log.Printf("im listening....\n")
-		err = ht.PopHashNodeFromChanAndCompare(ch)
-		if err != nil {
-			// close(ch)
+		node, ok := <-ch
+		if !ok {
 			break
 		}
+
+		// log.Printf("node:%v\n", node)
+		q.Store(node)
+		time.Sleep(2 * time.Microsecond)
 	}
 
-	ht.HashDump()
-	log.Printf("table len:%d\n", ht.GetLen())
-	// midx.WriteToFile("./20220701.idx")
+	wg.Add(1)
+	go popAndSaveToFile("./20220701-2460-858.idx", q)
+	// midx.WriteToFile("./20220518-456789-10-11-12-38.idx")
+	wg.Wait()
 	return err
+}
+
+func popAndSaveToFile(fp string, q *qsorter.Qsorter) {
+	defer wg.Done()
+	q.Pop(fp)
 }
 
 func SortItemWithChan(ch chan *btree_idx_demo.Idx_node, midx *mkt_idx_part.Mkt_idx) error {
@@ -134,43 +144,51 @@ func SortItemWithChan(ch chan *btree_idx_demo.Idx_node, midx *mkt_idx_part.Mkt_i
 		}
 	}
 
-	midx.DumpIdx()
+	// midx.DumpIdx()
 	log.Printf("list len:%d\n", midx.GetListLen())
-	// midx.WriteToFile("./20220701.idx")
+	midx.WriteToFile("./20220518-456789-10-11-12-38.idx")
 	return err
 }
 
-func buildHashNodeWithTlv(r *mkt_idx_part.Reader, tlv *mkt_idx_part.Tlv[any]) *btree_idx_demo.Hash_Node {
-	var bidIdx uint32
-	var dat int32
-	var tim int32
-	var instrId uint16
-	typ := btree_idx_demo.ETICK
+func buildHashNodeWithTlv(r *mkt_idx_part.Reader, tlv *mkt_idx_part.Tlv[any]) *qsorter.Qsorter_node {
+	var bidIdx uint32 = 0
+	// var dat int32
+	var tim int32 = 0
+	var instrId int32
+	// typ := btree_idx_demo.ETICK
 	off := r.Off
 
 	switch tlv.Header.DataTyp {
 	case mkt_idx_part.TICK_TYPE:
 		tick := tlv.Data.(mkt_idx_part.MdsL2Trade)
 		bidIdx = tick.ApplSeqNum
-		dat = tick.TradeDate
-		instrId = uint16(tick.InstrId)
+		tim = tick.TransactTime
+		instrId = tick.InstrId
 		off -= mkt_idx_part.TICKLEN
+
 	case mkt_idx_part.ORDER_TYPE:
 		ord := tlv.Data.(mkt_idx_part.MdsL2Order)
 		bidIdx = ord.ApplSeqNum
-		dat = ord.TradeDate
-		instrId = uint16(ord.InstrId)
+		tim = ord.TransactTime
+		instrId = ord.InstrId
 		off -= mkt_idx_part.ORDLEN
-		typ = btree_idx_demo.EORD
+
 	case mkt_idx_part.SNAPSHOT_TYPE:
 		ss := tlv.Data.(mkt_idx_part.MdsMktSZL2Snapshot)
 		tim = ss.Header.UpdateTime
-		dat = ss.Header.TradeDate
-		instrId = uint16(ss.Header.InstrId)
+		instrId = ss.Header.InstrId
 		off -= mkt_idx_part.SNAPLEN
-		typ = btree_idx_demo.ESNAP
+
 	}
-	return btree_idx_demo.NewHashNode(bidIdx, off, dat, typ, tim, instrId)
+	return &qsorter.Qsorter_node{
+		Qsorter_write_node: qsorter.Qsorter_write_node{
+			SZInStrId: instrId,
+			Off:       off,
+		},
+		BidIdx: bidIdx,
+		Tim:    tim,
+		N:      nil,
+	}
 
 }
 
@@ -208,62 +226,37 @@ func buildItemWithTlv(r *mkt_idx_part.Reader, tlv *mkt_idx_part.Tlv[any]) *btree
 
 }
 
-// func DumpTlv(tlv mkt_idx_part.Tlv[any]) {
-
-// 	switch tlv.Header.DataTyp {
-// 	case mkt_idx_part.TICK_TYPE:
-// 		tick := tlv.Data.(mkt_idx_part.MdsL2Trade)
-// 		log.Printf("tick:%v\n", tick)
-// 	case mkt_idx_part.ORDER_TYPE:
-// 		ord := tlv.Data.(mkt_idx_part.MdsL2Order)
-// 		log.Printf("ord:%v\n", ord)
-// 	case mkt_idx_part.SNAPSHOT_TYPE:
-// 		ss := tlv.Data.(mkt_idx_part.MdsMktSZL2Snapshot)
-// 		log.Printf("snapshot:%v\n", ss)
-// 	}
-// }
-
 func main() {
 	runtime.GOMAXPROCS(4)
-	mkt_idx := mkt_idx_part.NewMktIdx()
-	// ht := btree_idx_demo.NewHashTable(100000000)
-	ch := make(chan *btree_idx_demo.Idx_node, 1000)
-	// wg.Add(11)
-	// i = 10
-	// go ReadFileToBuildNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220701/000004.csv.3in1.0", ch)
-	// go ReadFileToBuildNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220701/000005.csv.3in1.0", ch)
-	// go ReadFileToBuildNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220701/000038.csv.3in1.0", ch)
-	// go ReadFileToBuildNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220701/000006.csv.3in1.0", ch)
-	// go ReadFileToBuildNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220701/000007.csv.3in1.0", ch)
-	// go ReadFileToBuildNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220701/000008.csv.3in1.0", ch)
-	// go ReadFileToBuildNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220701/000009.csv.3in1.0", ch)
-	// go ReadFileToBuildNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220701/000010.csv.3in1.0", ch)
-	// go ReadFileToBuildNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220701/000011.csv.3in1.0", ch)
-	// go ReadFileToBuildNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220701/000012.csv.3in1.0", ch)
-	// go ReadFileToBuildNodeIntoChan(r4, ch)
-	// fd := "/home/ty/data/221_data/csv_to_bin/20220701/"
-	// files, err := os.ReadDir(fd)
-	// if err != nil {
-	// 	return
-	// }
-	// len_files := len(files)
-	// log.Printf("len:%d\n", len_files)
-	// for idx := 0; idx < 10; idx += 5 {
-	// 	wg.Add(1)
-	// 	i += 1
-	// 	log.Printf("%s\n", fd+files[idx].Name())
-	// 	go ReadFileToBuildNodeIntoChan(fd+files[idx].Name(), ch)
-	// 	go ReadFileToBuildNodeIntoChan(fd+files[idx+1].Name(), ch)
-	// 	go ReadFileToBuildNodeIntoChan(fd+files[idx+2].Name(), ch)
-	// 	go ReadFileToBuildNodeIntoChan(fd+files[idx+3].Name(), ch)
-	// 	go ReadFileToBuildNodeIntoChan(fd+files[idx+4].Name(), ch)
-	// 	// log.Printf("file:%s\n", files[idx].Name())
-	// }
-	RunWithGoRoutine(8, "/home/ty/data/221_data/csv_to_bin/20220701/", ch)
+	// mkt_idx := mkt_idx_part.NewMktIdx()
+	sorter := qsorter.NewQSorter()
+	ch := make(chan *qsorter.Qsorter_node, 1000)
+	wg.Add(6)
+	i = 5
+
+	// =================================================================================================/
+	// ./20220518-456789-10-11-12-38.idx
+	// go ReadFileToBuildHashNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220518/000004.csv.3in1.0", ch)
+	// go ReadFileToBuildHashNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220518/000005.csv.3in1.0", ch)
+	// go ReadFileToBuildHashNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220518/000006.csv.3in1.0", ch)
+	// go ReadFileToBuildHashNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220518/000007.csv.3in1.0", ch)
+	// go ReadFileToBuildHashNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220518/000008.csv.3in1.0", ch)
+	// go ReadFileToBuildHashNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220518/000009.csv.3in1.0", ch)
+	// go ReadFileToBuildHashNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220518/000010.csv.3in1.0", ch)
+	// go ReadFileToBuildHashNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220518/000011.csv.3in1.0", ch)
+	// go ReadFileToBuildHashNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220518/000012.csv.3in1.0", ch)
+	// go ReadFileToBuildHashNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220518/000038.csv.3in1.0", ch)
+
+	// =================================================================================================/
+
+	go ReadFileToBuildHashNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220701/002594.csv.3in1.0", ch)
+	go ReadFileToBuildHashNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220701/300750.csv.3in1.0", ch)
+	go ReadFileToBuildHashNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220701/002460.csv.3in1.0", ch)
+	go ReadFileToBuildHashNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220701/000858.csv.3in1.0", ch)
+	go ReadFileToBuildHashNodeIntoChan("/home/ty/data/221_data/csv_to_bin/20220701/300390.csv.3in1.0", ch)
+
 	time.Sleep(10 * time.Millisecond)
-	wg.Add(1)
-	go SortItemWithChan(ch, mkt_idx)
-	// mkt_idx.DumpIdx()
+	go SortHashNodeWithChan(ch, sorter)
 	wg.Wait()
 
 }
@@ -305,4 +298,26 @@ func goReadFilesToBuildNodeIntoChan(fd string, files []string, ch chan *btree_id
 		ReadFileToBuildNodeIntoChan(fd+f, ch)
 	}
 	wg.Done()
+}
+
+func genStkFd(day int32, stks []string) []string {
+	tmp := make([]string, 0)
+	for _, stk := range stks {
+		fp := fmt.Sprintf("/home/ty/data/221_data/csv_to_bin/%d/%s.csv.3in1.0", day, stk)
+		tmp = append(tmp, fp)
+	}
+	return tmp
+}
+
+func GoGenIdxWithDayAndStks(day int32, stks []string, status qsorter.Status) {
+	ch := make(chan *btree_idx_demo.Idx_node, 1000)
+	if len(stks) == 1 {
+		RunWithGoRoutine(4, stks[0], ch)
+		status("ok...\n")
+		return
+	}
+
+	fps := genStkFd(day, stks)
+	goReadFilesToBuildNodeIntoChan(fd, stks, ch)
+
 }

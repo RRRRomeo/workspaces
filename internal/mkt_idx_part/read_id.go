@@ -178,7 +178,7 @@ func (r *Reader) ReadToChan(ch chan Tlv[any]) error {
 // 	return l
 // }
 
-func (r *Reader) ReadFrom(off uint32, typ uint16, tlv *Tlv[any]) error {
+func (r *Reader) ReadFrom(off uint32, tlv *Tlv[any]) error {
 	// l := getTypLen(typ)
 	if off != 0 {
 		r.f.Seek(int64(off), 0)

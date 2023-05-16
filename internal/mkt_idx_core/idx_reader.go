@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"map_chan/btree_idx_demo"
+	"map_chan/qsorter"
 	"os"
 	"strconv"
 	"strings"
@@ -84,9 +84,9 @@ func makeBufAndRead(f *os.File, buflen uint32, dataloader any) error {
 	return nil
 }
 
-func (r *IdxReader) Read() (*btree_idx_demo.Write_Node, error) {
+func (r *IdxReader) Read() (*qsorter.Qsorter_write_node, error) {
 	// ... return the typ off and instrId
-	node := &btree_idx_demo.Write_Node{}
+	node := &qsorter.Qsorter_write_node{}
 	var err error
 
 	if r.fd == nil {
@@ -94,17 +94,7 @@ func (r *IdxReader) Read() (*btree_idx_demo.Write_Node, error) {
 		return nil, err
 	}
 
-	e := makeBufAndRead(r.fd, 2, &node.Typ)
-	if e != nil {
-		return nil, e
-	}
-
-	e = makeBufAndRead(r.fd, 2, &node.SZInStrId)
-	if e != nil {
-		return nil, e
-	}
-
-	e = makeBufAndRead(r.fd, 4, &node.Dat)
+	e := makeBufAndRead(r.fd, 4, &node.SZInStrId)
 	if e != nil {
 		return nil, e
 	}
@@ -118,7 +108,7 @@ func (r *IdxReader) Read() (*btree_idx_demo.Write_Node, error) {
 	return node, nil
 }
 
-func ChangeStrId(id uint16) string {
+func ChangeStrId(id int32) string {
 	ids := strconv.Itoa(int(id))
 	l := len(ids)
 	subs := strings.Repeat("0", 6-l)

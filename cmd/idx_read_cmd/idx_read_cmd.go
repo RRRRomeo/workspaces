@@ -29,12 +29,15 @@ func CallIdxRead() {
 
 		// log.Printf("CallIdxRead ==> node:%v\n", node)
 		sid := mktidxcore.ChangeStrId(node.SZInStrId)
-		ffp := fmt.Sprintf("/home/ty/data/221_data/csv_to_bin/%d/%s.csv.3in1.0", node.Dat, sid)
+		ffp := fmt.Sprintf("/home/ty/data/221_data/csv_to_bin/%d/%s.csv.3in1.0", 20220701, sid)
 
-		// log.Printf("ffp:%s\n", ffp)
+		log.Printf("ffp:%s\n", ffp)
 		csvreader := mkt_idx_part.NewReader(0, ffp)
+		if csvreader == nil {
+			continue
+		}
 		tlv := &mkt_idx_part.Tlv[any]{}
-		csvreader.ReadFrom(node.Off, node.Typ, tlv)
+		csvreader.ReadFrom(node.Off, tlv)
 		csvreader.ReleaseReader()
 		log.Printf("tlv:%v\n", tlv)
 	}

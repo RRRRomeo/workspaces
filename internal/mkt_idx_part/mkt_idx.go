@@ -11,6 +11,7 @@ import (
 	"errors"
 	"log"
 	"map_chan/btree_idx_demo"
+	"map_chan/qsorter"
 	"sync"
 )
 
@@ -62,7 +63,7 @@ func (i *Mkt_idx) WriteToFile(fp string) {
 func (i *Mkt_idx) GetListLen() uint64 {
 	return i.list.L
 }
-func PushHashNodeIntoChan(ch chan *btree_idx_demo.Hash_Node, item *btree_idx_demo.Hash_Node) {
+func PushHashNodeIntoChan(ch chan *qsorter.Qsorter_node, item *qsorter.Qsorter_node) {
 	if item == nil {
 		return
 	}
